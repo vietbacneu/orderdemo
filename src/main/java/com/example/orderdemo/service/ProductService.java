@@ -1,12 +1,15 @@
 package com.example.orderdemo.service;
 
 import com.example.orderdemo.IMP.ProductIMP;
+import com.example.orderdemo.dto.CategoryDTO;
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.dto.ProductDetailDTO;
+import com.example.orderdemo.entity.Category;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.entity.ProductDetail;
 import com.example.orderdemo.mapper.ProductDetailMapper;
 import com.example.orderdemo.mapper.ProductMapper;
+import com.example.orderdemo.reponsitory.CatergoryReponsitory;
 import com.example.orderdemo.reponsitory.ProductReponsitory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ public class ProductService implements ProductIMP {
     ProductMapper productMapper;
     @Autowired
     ProductReponsitory productReponsitory;
+//    @Autowired
+//    CatergoryReponsitory catergoryReponsitory;
 
     public List<ProductDTO> getAll() {
         List<Product> products = productReponsitory.findAll();
@@ -29,7 +34,13 @@ public class ProductService implements ProductIMP {
         products.forEach(product -> {
             productDTOS.add(productMapper.toProductDTO(product));
         });
+
+//        List<CategoryDTO> categories = catergoryReponsitory.findCategoryById(1L);
+//        categories.forEach(categoryDTO -> {
+//            System.out.println(categoryDTO.toString());
+//        });
         return productDTOS;
+
     }
 
     public void add(ProductDTO productDTO) {

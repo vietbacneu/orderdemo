@@ -12,6 +12,7 @@ public class ProductDTO {
     private Long idCategory;
     private List<ProductDetailDTO> productDetailDTO;
 
+
     public Long getIdProduct() {
         return idProduct;
     }
