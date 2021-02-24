@@ -6,6 +6,8 @@ import com.example.orderdemo.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.List;
+
 @Mapper(uses = {ProductDetailMapper.class}, componentModel = "spring")
 public interface ProductMapper {
     @Mapping(source = "productDetailList", target = "productDetailDTO")
@@ -17,4 +19,6 @@ public interface ProductMapper {
     @Mapping(source = "idProduct", target = "id")
     @Mapping(source = "idCategory", target = "category.id")
     Product toProductEntity(ProductDTO productDTO);
+
+    List<ProductDTO> toEntity(List<Product> products);
 }
