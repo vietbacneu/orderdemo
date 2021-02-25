@@ -1,17 +1,13 @@
 package com.example.orderdemo.service;
 
 import com.example.orderdemo.IMP.ProductIMP;
-import com.example.orderdemo.dto.CategoryDTO;
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.dto.ProductDetailDTO;
-import com.example.orderdemo.entity.Category;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.entity.ProductDetail;
 import com.example.orderdemo.mapper.ProductDetailMapper;
 import com.example.orderdemo.mapper.ProductMapper;
-import com.example.orderdemo.reponsitory.CatergoryReponsitory;
-import com.example.orderdemo.reponsitory.ProductCriteriaIMP;
-import com.example.orderdemo.reponsitory.ProductReponsitory;
+import com.example.orderdemo.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,12 +21,11 @@ public class ProductService implements ProductIMP {
     @Autowired
     ProductMapper productMapper;
     @Autowired
-    ProductReponsitory productReponsitory;
-    @Autowired
-    ProductCriteriaIMP productCriteriaIMP;
+    ProductRepository productRepository;
+
 
     public List<ProductDTO> getAll() {
-        List<Product> products = productReponsitory.findAll();
+        List<Product> products = productRepository.findAll();
         List<ProductDTO> productDTOS = new ArrayList<>();
         products.forEach(product -> {
             productDTOS.add(productMapper.toProductDTO(product));
@@ -48,7 +43,7 @@ public class ProductService implements ProductIMP {
             productDetailList.add(productDetail);
         });
         product.setProductDetailList(productDetailList);
-        productReponsitory.save(product);
+        productRepository.save(product);
 
     }
 
@@ -64,10 +59,10 @@ public class ProductService implements ProductIMP {
             productDetailList.add(productDetail);
         }
         product.setProductDetailList(productDetailList);
-        productReponsitory.save(product);
+        productRepository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        productReponsitory.deleteById(id);
+        productRepository.deleteById(id);
     }
 }

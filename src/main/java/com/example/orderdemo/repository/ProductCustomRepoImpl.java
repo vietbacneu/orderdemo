@@ -1,10 +1,8 @@
-package com.example.orderdemo.reponsitory;
+package com.example.orderdemo.repository;
 
 import com.example.orderdemo.entity.Product;
-import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -13,8 +11,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-@Repository
-public class ProductCriteria implements ProductCriteriaIMP {
+public class ProductCustomRepoImpl implements ProductCustomRepo {
     @PersistenceContext
     EntityManager em;
 
@@ -37,7 +34,6 @@ public class ProductCriteria implements ProductCriteriaIMP {
         cq.select(productRoot.get("name"));
 //        đây là multi
 //        cq.multiselect(productRoot.get("name"),productRoot.get("image"));
-
         CriteriaQuery<Product> select = cq.select(productRoot);
         TypedQuery<Product> query = em.createQuery(select);
         return query.getResultList();

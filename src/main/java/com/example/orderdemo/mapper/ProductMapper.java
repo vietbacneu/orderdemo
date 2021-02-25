@@ -15,10 +15,12 @@ public interface ProductMapper {
     @Mapping(source = "category.id", target = "idCategory")
     ProductDTO toProductDTO(Product product);
 
+    List<Product> toEntityList(List<ProductDTO> productDTOS);
+
     @Mapping(source = "productDetailDTO", target = "productDetailList")
     @Mapping(source = "idProduct", target = "id")
     @Mapping(source = "idCategory", target = "category.id")
     Product toProductEntity(ProductDTO productDTO);
 
-    List<ProductDTO> toEntity(List<Product> products);
+    List<ProductDTO> toDTOList(List<Product> products);
 }

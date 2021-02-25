@@ -34,13 +34,16 @@ public class ProductController {
 
     @GetMapping
     public Page<ProductDTO> getAll(@RequestParam(value = "name", required = false) String name,
-                                   @RequestParam(value = "page", required = false) Integer pageable
+                                   @RequestParam(value = "page", required = false) Long  pageable
                                   ,@RequestParam(value = "sort", required = false) String sort,
                                    @RequestParam(value = "min", required = false) Long min,
                                    @RequestParam(value = "max", required = false) Long max
                            ) {
         return pageAndSortService.getProductbyName(pageable,name,sort,min,max);
     }
+
+
+
 
     @PostMapping()
     public void add(@RequestBody ProductDTO productDTO) {

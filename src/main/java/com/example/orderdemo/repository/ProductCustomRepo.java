@@ -1,4 +1,4 @@
-package com.example.orderdemo.reponsitory;
+package com.example.orderdemo.repository;
 
 import com.example.orderdemo.entity.Product;
 import org.springframework.stereotype.Repository;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductCriteriaIMP {
+public interface ProductCustomRepo {
     List<Product> singleOrMultipleExpression();
 
     List<Product> whereByNameOrId(String name, Long id);
