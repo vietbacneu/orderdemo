@@ -38,6 +38,7 @@ public class ProductServiceCriteria {
 //        });
 //        return productDTOS;
 //    }
+
     public List<ProductDTO> whereByNameOrId(String name, Long id) {
         Specification specification = Specification.where(ProductCriteriaJPARepoImpl.byName(name)).or(ProductCriteriaJPARepoImpl.byId(id));
         List<Product> products = productRepository.findAll(specification);
