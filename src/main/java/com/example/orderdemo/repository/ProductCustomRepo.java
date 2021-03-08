@@ -1,6 +1,6 @@
 package com.example.orderdemo.repository;
 
-import com.example.orderdemo.dto.ProSizeDTO;
+import com.example.orderdemo.dto.ProCatDTO;
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.request.SearchRequest;
@@ -19,5 +19,5 @@ public interface ProductCustomRepo {
     List<Product> groupByAndHavingAndOrder();
     List<ProductDTO> getProductDTO();
     List<Object[]> getProductDTO1();
-    Page<ProSizeDTO> getCriteriaJoin(SearchRequest request, Pageable pageable);
+    Page<ProCatDTO> getCriteriaJoin(SearchRequest request, Pageable pageable);
 }

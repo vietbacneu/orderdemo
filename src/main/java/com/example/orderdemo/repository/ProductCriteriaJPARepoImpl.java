@@ -1,9 +1,8 @@
 package com.example.orderdemo.repository;
 
-import com.example.orderdemo.dto.ProSizeDTO;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.entity.Product_;
-import org.springframework.data.domain.Pageable;
+import com.example.orderdemo.request.SearchRequest;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -33,15 +32,15 @@ public class ProductCriteriaJPARepoImpl {
         };
     }
 
-    public static Specification<Product> productSpecification(String proName, Long idCategory) {
+    public static Specification<Product> productSpecification(SearchRequest searchRequest) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            Predicate predicate = criteriaBuilder.equal(root.get(Product_.category).get("id"), idCategory);
-            Predicate predicate1 = criteriaBuilder.like(root.get(Product_.name), proName);
-            if (idCategory != null) {
+            Predicate predicate = criteriaBuilder.equal(root.get(Product_.category).get("id"), searchRequest.getIdCat());
+            Predicate predicate1 = criteriaBuilder.like(root.get(Product_.name), searchRequest.getProName());
+            if (searchRequest.getIdCat() != null) {
                 predicates.add(predicate);
             }
-            if (proName != null && proName.trim().length() > 0) {
+            if (searchRequest.getProName() != null && searchRequest.getProName().trim().length() > 0) {
                 predicates.add(predicate1);
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

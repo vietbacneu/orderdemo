@@ -8,7 +8,11 @@ import com.example.orderdemo.entity.ProductDetail;
 import com.example.orderdemo.mapper.ProductDetailMapper;
 import com.example.orderdemo.mapper.ProductMapper;
 import com.example.orderdemo.repository.ProductRepository;
+import com.example.orderdemo.request.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,13 +28,13 @@ public class ProductService implements ProductIMP {
     ProductRepository productRepository;
 
 
-    public List<ProductDTO> getAll() {
-        List<Product> products = productRepository.findAll();
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOS.add(productMapper.toProductDTO(product));
-        });
-        return productDTOS;
+    public Page<ProductDTO> getAllorSearch(SearchRequest searchRequest, Pageable pageable) {
+        String productName = searchRequest.getProName() == null ? "" : searchRequest.getProName();
+        Long minPrice = searchRequest.getMin() == null ? 0 : searchRequest.getMin();
+        Long maxPrice = searchRequest.getMax() == null ? 10000000 : searchRequest.getMax();
+        Page<Product> products = productRepository.getAll(productName, minPrice, maxPrice, pageable);
+        List<ProductDTO> productDTOList = productMapper.toDTOList(products.getContent());
+        return new PageImpl<>(productDTOList, pageable, products.getTotalElements());
     }
 
     public void add(ProductDTO productDTO) {

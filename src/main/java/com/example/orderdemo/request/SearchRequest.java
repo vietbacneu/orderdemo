@@ -6,5 +6,6 @@ import lombok.Data;
 public class SearchRequest {
     private Long idCat;
     private String proName;
-
+    private Long min;
+    private Long max;
 }

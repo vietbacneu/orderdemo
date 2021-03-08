@@ -1,6 +1,6 @@
 package com.example.orderdemo.service;
 
-import com.example.orderdemo.dto.ProSizeDTO;
+import com.example.orderdemo.dto.ProCatDTO;
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.mapper.ProductMapper;
@@ -14,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,12 +25,7 @@ public class ProductServiceCriteria {
 
     public List<ProductDTO> singleOrMultipleExpression() {
         List<Product> products = productRepository.singleOrMultipleExpression();
-        System.out.println(products.size());
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOS.add(productMapper.toProductDTO(product));
-        });
-        return productDTOS;
+        return productMapper.toDTOList(products);
     }
 
     public List<ProductDTO> getProductDTO() {
@@ -42,29 +36,21 @@ public class ProductServiceCriteria {
         return productRepository.getProductDTO1();
     }
 
-    public Page<ProSizeDTO> getCriteriaJoin(SearchRequest searchRequest, Pageable pageable) {
+    public Page<ProCatDTO> getCriteriaJoin(SearchRequest searchRequest, Pageable pageable) {
         return productRepository.getCriteriaJoin(searchRequest, pageable);
     }
 
-    public Page<ProductDTO> getSpec (String name, Long id, Pageable pageable) {
-        Specification specification = Specification.where(ProductCriteriaJPARepoImpl.productSpecification(name, id));
+    public Page<ProductDTO> getSpec(SearchRequest searchRequest, Pageable pageable) {
+        Specification specification = Specification.where(ProductCriteriaJPARepoImpl.productSpecification(searchRequest));
         Page<Product> products = productRepository.findAll(specification, pageable);
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOS.add(productMapper.toProductDTO(product));
-        });
-        return new PageImpl<>(productDTOS,pageable,products.getTotalElements());
+        List<ProductDTO> productDTOS = productMapper.toDTOList(products.getContent());
+        return new PageImpl<>(productDTOS, pageable, products.getTotalElements());
     }
 
 
     public List<ProductDTO> groupByAndHavingAndOrder() {
         List<Product> products = productRepository.groupByAndHavingAndOrder();
-        System.out.println(products.size());
-        List<ProductDTO> productDTOS = new ArrayList<>();
-        products.forEach(product -> {
-            productDTOS.add(productMapper.toProductDTO(product));
-        });
-        return productDTOS;
+        return productMapper.toDTOList(products);
     }
 
 }

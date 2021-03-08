@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProSizeDTO {
+public class ProCatDTO {
     private Long idProduct;
     private String nameProduct;
     private Long priceProduct;
@@ -17,7 +17,7 @@ public class ProSizeDTO {
     private Long idCategory;
     private String nameCategory;
 
-    public ProSizeDTO(Long idProduct, String nameProduct, Long idCategory, String nameCategory) {
+    public ProCatDTO(Long idProduct, String nameProduct, Long idCategory, String nameCategory) {
         this.idProduct = idProduct;
         this.nameProduct = nameProduct;
         this.idCategory = idCategory;

@@ -1,6 +1,6 @@
 package com.example.orderdemo.repository;
 
-import com.example.orderdemo.dto.ProSizeDTO;
+import com.example.orderdemo.dto.ProCatDTO;
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.entity.ProductDetail;
@@ -9,7 +9,6 @@ import com.example.orderdemo.entity.Product_;
 import com.example.orderdemo.request.SearchRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.query.QueryUtils;
 
@@ -131,9 +130,9 @@ public class ProductCustomRepoImpl implements ProductCustomRepo {
 
 
     @Override
-    public Page<ProSizeDTO> getCriteriaJoin(SearchRequest request, Pageable pageable) {
+    public Page<ProCatDTO> getCriteriaJoin(SearchRequest request, Pageable pageable) {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<ProSizeDTO> criteriaQuery = criteriaBuilder.createQuery(ProSizeDTO.class);
+        CriteriaQuery<ProCatDTO> criteriaQuery = criteriaBuilder.createQuery(ProCatDTO.class);
         Root<Product> root = criteriaQuery.from(Product.class);
         root.join("category", JoinType.INNER);
 //        criteriaQuery.select(criteriaBuilder.construct(ProSizeDTO.class,
@@ -158,7 +157,7 @@ public class ProductCustomRepoImpl implements ProductCustomRepo {
         criteriaQuery.where(arr);
         int totalPage = em.createQuery(criteriaQuery).getResultList().size();
         criteriaQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), root, criteriaBuilder));
-        TypedQuery<ProSizeDTO> typedQuery = em.createQuery(criteriaQuery);
+        TypedQuery<ProCatDTO> typedQuery = em.createQuery(criteriaQuery);
         typedQuery.setFirstResult((int) pageable.getOffset());
         typedQuery.setMaxResults(pageable.getPageSize());
         return new PageImpl<>(typedQuery.getResultList(), pageable, totalPage);

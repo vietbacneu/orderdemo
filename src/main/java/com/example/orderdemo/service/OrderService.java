@@ -12,8 +12,10 @@ import com.example.orderdemo.repository.OrderDetailRepository;
 import com.example.orderdemo.repository.OrderProductRepository;
 import com.example.orderdemo.repository.ProductDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,18 +33,14 @@ public class OrderService implements OrderIMP {
     @Autowired
     OrderDetailRepository orderDetailRepository;
 
+
     @Override
-    public List<OrderProductDTO> getAll() {
-        List<OrderProduct> orderProducts = orderProductRepository.findAll();
-        List<OrderProductDTO> orderProductDTOS = new ArrayList<>();
-        orderProducts.forEach(orderProduct -> {
-            orderProductDTOS.add(orderMapper.toOrderDTO(orderProduct));
-        });
-        return orderProductDTOS;
+    public Page<OrderProductDTO> getAll(Pageable pageable) {
+        Page<OrderProduct> orderProducts = orderProductRepository.findAll(pageable);
+        return new PageImpl<>(orderMapper.toOrderDTOList(orderProducts.getContent()), pageable, orderProducts.getTotalElements());
     }
 
     @Override
-    @Transactional
     public void addOrder(OrderProductDTO orderProductDTO) {
         OrderProduct orderProduct = orderMapper.toOrderEntity(orderProductDTO);
         List<OrderDetailDTO> orderDetailDTOList = orderProductDTO.getOrderDetailDTOList();
@@ -62,8 +60,7 @@ public class OrderService implements OrderIMP {
         orderProduct.setId(id);
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<OrderDetailDTO> orderDetailDTOList = orderProductDTO.getOrderDetailDTOList();
-        for (int i = 0; i < orderDetailDTOList.size(); i++) {
-            OrderDetailDTO orderDetailDTO = orderDetailDTOList.get(i);
+        for (OrderDetailDTO orderDetailDTO : orderDetailDTOList) {
             OrderDetail orderDetail = orderDetailMapper.toOrderDetailEntity(orderDetailDTO);
             ProductDetail productDetail = productDetailRepository.getOne(orderDetailDTO.getIdProductDetail());
             orderDetail.setProductDetail(productDetail);

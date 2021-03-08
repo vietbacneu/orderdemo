@@ -10,7 +10,7 @@ public interface ProductDetailMapper {
     @Mapping(source = "size.id", target = "idSize")
     @Mapping(source = "product.id", target = "idProduct")
     @Mapping(source = "id", target = "id")
-    ProductDetailDTO toProductDetaiDTO(ProductDetail productDetail);
+    ProductDetailDTO toProductDetailDTO(ProductDetail productDetail);
 
     @Mapping(source = "idSize", target = "size.id")
     @Mapping(source = "idProduct", target = "product.id")
