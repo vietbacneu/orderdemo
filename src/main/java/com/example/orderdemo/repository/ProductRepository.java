@@ -13,9 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long>, ProductCustomRepo, JpaSpecificationExecutor<Product> {
 
     @Query(value = "SELECT * FROM product p WHERE p.name like %:name% and p.price > :min and p.price < :max ",
-            countQuery = "select count(*) from product",
             nativeQuery = true)
     Page<Product> getAll(@Param("name") String name, @Param("min") Long min, @Param("max") Long max, Pageable pageable);
-
 
 }

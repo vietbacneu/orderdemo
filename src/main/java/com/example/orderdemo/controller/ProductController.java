@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -42,11 +43,16 @@ public class ProductController {
         return pageAndSortService.getProductbyName(pageable,name,sort,min,max);
     }
 
+    @GetMapping("test")
+    public Page<ProductDTO> getAll(@PageableDefault Pageable pageable){
+        return pageAndSortService.getAllProductByPage(pageable);
+    }
+
 
 
 
     @PostMapping()
-    public void add(@RequestBody ProductDTO productDTO) {
+    public void add(@Valid @RequestBody ProductDTO productDTO) {
         productService.add(productDTO);
     }
 

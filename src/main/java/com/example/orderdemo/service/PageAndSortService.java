@@ -12,15 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Service
 public class PageAndSortService {
-    @PersistenceContext
-    EntityManager em;
-
     @Autowired
     ProductRepository productRepository;
 
@@ -28,6 +23,9 @@ public class PageAndSortService {
     ProductMapper productMapper;
 
     public Page<ProductDTO> getAllProductByPage(Pageable pageable) {
+        Sort sort = Sort.by("price").descending();
+
+//        Sort sort = Sort.by("price").and(Sort.by("quantity")).descending();
         Page<Product> products = productRepository.findAll(pageable);
         List<ProductDTO> productDTOList = productMapper.toDTOList(products.getContent());
         return new PageImpl<>(productDTOList, pageable, products.getTotalElements());

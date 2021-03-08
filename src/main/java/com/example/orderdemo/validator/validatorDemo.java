@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD,ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface validatorDemo {
-    String message() default "UserName phải có độ tài từ 6 đến 12 ký tự, không có khoảng trắng và không dấu:";
+    String message() default "{user.name}";
     // Cái này là bắt buộc phải có để Hibernate Validator có thể hoạt động
     Class<?>[] groups() default {};
     // Cái này là bắt buộc phải có để Hibernate Validator có thể hoạt động

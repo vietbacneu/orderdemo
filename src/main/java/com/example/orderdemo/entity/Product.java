@@ -19,19 +19,18 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
     @Column(nullable = false)
     private String name;
     private String description;
     private String image;
-    @NotNull
-    @Min(value = 0, message = "Số lượng phải lớn hơn 0")
+//    @NotNull(message = "{notnull}")
+//    @Min(value = 0, message = "{quantity.min}")
     private Long quantity;
-    @NotNull
-    @Min(value = 0, message = "Giá phải lớn hơn 0")
+//    @NotNull(message = "{notnull}")
+//    @Min(value = 0, message = "{price.min}")
     private Long price;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 

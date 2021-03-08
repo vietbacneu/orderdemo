@@ -1,17 +1,37 @@
 package com.example.orderdemo.dto;
 
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.util.List;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ProductDTO {
     private Long idProduct;
+    @NotNull(message = "{notnull}")
     private String name;
+    @NotNull(message = "{notnull}")
+    @Min(value = 0, message = "{price.min}")
     private Long price;
+    @NotNull(message = "{notnull}")
+    @Min(value = 0, message = "{quantity.min}")
     private Long quantity;
     private String description;
     private String image;
     private Long idCategory;
     private List<ProductDetailDTO> productDetailDTO;
 
+
+    public ProductDTO(Long idProduct, @NotNull String name) {
+        this.idProduct = idProduct;
+        this.name = name;
+    }
 
     public Long getIdProduct() {
         return idProduct;

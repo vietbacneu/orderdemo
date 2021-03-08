@@ -1,11 +1,16 @@
 package com.example.orderdemo.service;
 
+import com.example.orderdemo.dto.ProSizeDTO;
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.mapper.ProductMapper;
 import com.example.orderdemo.repository.ProductCriteriaJPARepoImpl;
 import com.example.orderdemo.repository.ProductRepository;
+import com.example.orderdemo.request.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -29,24 +34,26 @@ public class ProductServiceCriteria {
         return productDTOS;
     }
 
-//    public List<ProductDTO> whereByNameOrId(String name, Long id) {
-//        List<Product> products = productRepository.whereByNameOrId(name, id);
+    public List<ProductDTO> getProductDTO() {
+        return productRepository.getProductDTO();
+    }
 
-    //        List<ProductDTO> productDTOS = new ArrayList<>();
-//        products.forEach(product -> {
-//            productDTOS.add(productMapper.toProductDTO(product));
-//        });
-//        return productDTOS;
-//    }
+    public List<Object[]> getProductDTO1() {
+        return productRepository.getProductDTO1();
+    }
 
-    public List<ProductDTO> whereByNameOrId(String name, Long id) {
-        Specification specification = Specification.where(ProductCriteriaJPARepoImpl.byName(name)).or(ProductCriteriaJPARepoImpl.byId(id));
-        List<Product> products = productRepository.findAll(specification);
+    public Page<ProSizeDTO> getCriteriaJoin(SearchRequest searchRequest, Pageable pageable) {
+        return productRepository.getCriteriaJoin(searchRequest, pageable);
+    }
+
+    public Page<ProductDTO> getSpec (String name, Long id, Pageable pageable) {
+        Specification specification = Specification.where(ProductCriteriaJPARepoImpl.productSpecification(name, id));
+        Page<Product> products = productRepository.findAll(specification, pageable);
         List<ProductDTO> productDTOS = new ArrayList<>();
         products.forEach(product -> {
             productDTOS.add(productMapper.toProductDTO(product));
         });
-        return productDTOS;
+        return new PageImpl<>(productDTOS,pageable,products.getTotalElements());
     }
 
 
