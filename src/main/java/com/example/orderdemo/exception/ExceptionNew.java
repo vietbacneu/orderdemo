@@ -65,7 +65,7 @@ public class ExceptionNew extends ResponseEntityExceptionHandler {
         body.put("timestamp", new Date());
         body.put("status", status.value());
         //Get all errors
-        String errors = ex.getMessage();
+        String errors = ex.getLocalizedMessage();
         body.put("errors", errors);
         return new ResponseEntity<>(body, headers, status);
     }

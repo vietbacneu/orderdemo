@@ -106,6 +106,7 @@ public class ProductCustomRepoImpl implements ProductCustomRepo {
 //                        root.get(Product_.name)));
         q.multiselect(root.get(Product_.id), root.get(Product_.name));
 
+
         TypedQuery<ProductDTO> query = em.createQuery(q);
         List<ProductDTO> productDTOList = query.getResultList();
         return productDTOList;
@@ -134,32 +135,30 @@ public class ProductCustomRepoImpl implements ProductCustomRepo {
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         CriteriaQuery<ProCatDTO> criteriaQuery = criteriaBuilder.createQuery(ProCatDTO.class);
         Root<Product> root = criteriaQuery.from(Product.class);
-        root.join("category", JoinType.INNER);
-//        criteriaQuery.select(criteriaBuilder.construct(ProSizeDTO.class,
-//                root.get(Product_.id),
-//                root.get(Product_.name),
-//                root.get(Product_.category).get("id"),
-//                root.get(Product_.category).get("name")));
+        root.join("category", JoinType.LEFT);
+        List<Predicate> predicatess = new ArrayList<>();
+        Predicate predicate2 = criteriaBuilder.equal(root.get(Product_.category).get("id"), request.getIdCat());
+        Predicate predicate3 = criteriaBuilder.like(root.get(Product_.name), request.getProName());
+        if (request.getIdCat() != null) {
+            predicatess.add(predicate2);
+        }
+        if (request.getProName() != null && request.getProName().trim().length() > 0) {
+            predicatess.add(predicate3);
+        }
+        Predicate[] arr1 = predicatess.toArray(new Predicate[0]);
         criteriaQuery.multiselect(root.get(Product_.id),
                 root.get(Product_.name),
                 root.get(Product_.category).get("id"),
                 root.get(Product_.category).get("name"));
-        List<Predicate> predicates = new ArrayList<>();
-        Predicate predicate = criteriaBuilder.equal(root.get(Product_.category).get("id"), request.getIdCat());
-        Predicate predicate1 = criteriaBuilder.like(root.get(Product_.name), request.getProName());
-        if (request.getIdCat() != null) {
-            predicates.add(predicate);
-        }
-        if (request.getProName() != null && request.getProName().trim().length() > 0) {
-            predicates.add(predicate1);
-        }
-        Predicate[] arr = predicates.toArray(new Predicate[0]);
-        criteriaQuery.where(arr);
-        int totalPage = em.createQuery(criteriaQuery).getResultList().size();
         criteriaQuery.orderBy(QueryUtils.toOrders(pageable.getSort(), root, criteriaBuilder));
         TypedQuery<ProCatDTO> typedQuery = em.createQuery(criteriaQuery);
+        CriteriaQuery<Long> total = criteriaBuilder.createQuery(Long.class);
+        Root<Product> rootTotal = total.from(Product.class);
+        TypedQuery<Long> totalPage = em.createQuery(total.select(criteriaBuilder.count(rootTotal.get(Product_.id))).where(arr1));
         typedQuery.setFirstResult((int) pageable.getOffset());
         typedQuery.setMaxResults(pageable.getPageSize());
-        return new PageImpl<>(typedQuery.getResultList(), pageable, totalPage);
+        return new PageImpl<>(typedQuery.getResultList(), pageable, totalPage.getSingleResult());
     }
+
+
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity(name = "customer")
-public class Customer {
+public class Customer extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,7 +22,7 @@ public class Customer {
     private String name;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "customer_id")
     private List<OrderProduct> orderList;
 

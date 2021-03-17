@@ -2,6 +2,7 @@ package com.example.orderdemo.controller;
 
 import com.example.orderdemo.dto.OrderProductDTO;
 import com.example.orderdemo.service.OrderService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,7 +33,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    public void updateOrder(@RequestBody OrderProductDTO orderProductDTO, @PathVariable Long id) {
+    public void updateOrder(@RequestBody OrderProductDTO orderProductDTO, @PathVariable Long id) throws NotFoundException {
         orderService.updateOrder(orderProductDTO, id);
         System.out.println("hello");
     }

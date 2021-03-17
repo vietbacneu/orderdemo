@@ -2,6 +2,7 @@ package com.example.orderdemo.IMP;
 
 import com.example.orderdemo.dto.ProductDTO;
 import com.example.orderdemo.request.SearchRequest;
+import javassist.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +13,7 @@ public interface ProductIMP {
 
     void add(ProductDTO productDTO);
 
-    void updateProduct(ProductDTO productDTO, Long id);
+    void updateProduct(ProductDTO productDTO, Long id) throws NotFoundException;
 
     void deleteProduct(Long id);
 }

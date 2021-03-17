@@ -1,8 +1,12 @@
 package com.example.orderdemo.entity;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +19,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity(name = "product")
-public class Product {
+@EntityListeners(AuditingEntityListener.class)
+public class Product extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,18 +28,14 @@ public class Product {
     private String name;
     private String description;
     private String image;
-//    @NotNull(message = "{notnull}")
-//    @Min(value = 0, message = "{quantity.min}")
     private Long quantity;
-//    @NotNull(message = "{notnull}")
-//    @Min(value = 0, message = "{price.min}")
     private Long price;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinColumn(name = "product_id")
     private List<ProductDetail> productDetailList;
 

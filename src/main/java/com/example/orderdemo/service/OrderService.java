@@ -11,6 +11,7 @@ import com.example.orderdemo.mapper.OrderMapper;
 import com.example.orderdemo.repository.OrderDetailRepository;
 import com.example.orderdemo.repository.OrderProductRepository;
 import com.example.orderdemo.repository.ProductDetailRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService implements OrderIMP {
@@ -55,8 +57,14 @@ public class OrderService implements OrderIMP {
     }
 
     @Override
-    public void updateOrder(OrderProductDTO orderProductDTO, Long id) {
+    public void updateOrder(OrderProductDTO orderProductDTO, Long id) throws NotFoundException {
+        Optional<OrderProduct> orderProduct1 = orderProductRepository.findById(id);
+        if (!orderProduct1.isPresent()) {
+            throw new NotFoundException("không tìm thấy");
+        }
         OrderProduct orderProduct = orderMapper.toOrderEntity(orderProductDTO);
+        orderProduct.setCreatedBy(orderProduct1.get().getCreatedBy());
+        orderProduct.setCreatedTime(orderProduct1.get().getCreatedTime());
         orderProduct.setId(id);
         List<OrderDetail> orderDetails = new ArrayList<>();
         List<OrderDetailDTO> orderDetailDTOList = orderProductDTO.getOrderDetailDTOList();

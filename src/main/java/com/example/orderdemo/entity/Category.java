@@ -10,12 +10,12 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity(name = "category")
-public class Category {
+public class Category extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "category_id")
     private List<Product> productList;
 

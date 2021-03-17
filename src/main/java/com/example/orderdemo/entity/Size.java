@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 import java.util.List;
 
 @Entity(name = "size")
-public class Size {
+public class Size extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

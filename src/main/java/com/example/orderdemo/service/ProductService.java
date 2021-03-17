@@ -7,16 +7,20 @@ import com.example.orderdemo.entity.Product;
 import com.example.orderdemo.entity.ProductDetail;
 import com.example.orderdemo.mapper.ProductDetailMapper;
 import com.example.orderdemo.mapper.ProductMapper;
+import com.example.orderdemo.repository.ProductDetailRepository;
 import com.example.orderdemo.repository.ProductRepository;
 import com.example.orderdemo.request.SearchRequest;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService implements ProductIMP {
@@ -26,7 +30,8 @@ public class ProductService implements ProductIMP {
     ProductMapper productMapper;
     @Autowired
     ProductRepository productRepository;
-
+    @Autowired
+    ProductDetailRepository productDetailRepository;
 
     public Page<ProductDTO> getAllorSearch(SearchRequest searchRequest, Pageable pageable) {
         String productName = searchRequest.getProName() == null ? "" : searchRequest.getProName();
@@ -51,19 +56,23 @@ public class ProductService implements ProductIMP {
 
     }
 
-    public void updateProduct(ProductDTO productDTO, Long id) {
-        Product product = productMapper.toProductEntity(productDTO);
-        product.setId(id);
-        List<ProductDetail> productDetailList = new ArrayList<>();
-        List<ProductDetailDTO> productDetailDTOList = productDTO.getProductDetailDTO();
-        for (int i = 0; i < productDetailDTOList.size(); i++) {
-            ProductDetailDTO productDetailDTO = productDTO.getProductDetailDTO().get(i);
-            ProductDetail productDetail = productDetailMapper.toProductDetailEntity(productDetailDTO);
-            productDetail.setProduct(product);
-            productDetailList.add(productDetail);
+    @Transactional
+    public void updateProduct(ProductDTO productDTO, Long id) throws NotFoundException {
+        Optional<Product> product = productRepository.findById(id);
+        if (!product.isPresent()) {
+            throw new NotFoundException("Không có sp nào");
         }
-        product.setProductDetailList(productDetailList);
-        productRepository.save(product);
+        productMapper.update(productDTO, product.get());
+        List<ProductDetail> productDetailList = new ArrayList<>();
+        List<ProductDetailDTO> productDetailDTOS = productDTO.getProductDetailDTO();
+        productDetailDTOS.forEach(productDetailDTO -> {
+            Optional<ProductDetail> productDetail = productDetailRepository.findById(productDetailDTO.getId());
+            if (productDetail.isPresent()) {
+                productDetailMapper.update(productDetailDTO, productDetail.get());
+                productDetailList.add(productDetail.get());
+            }
+        });
+        product.get().setProductDetailList(productDetailList);
     }
 
     public void deleteProduct(Long id) {

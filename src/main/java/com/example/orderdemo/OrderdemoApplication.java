@@ -1,10 +1,15 @@
 package com.example.orderdemo;
 
+import com.example.orderdemo.entity.User;
+import com.example.orderdemo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
@@ -19,6 +24,7 @@ public class OrderdemoApplication {
         slr.setDefaultLocale(Locale.getDefault());
         return slr;
     }
+
     @Bean(name = "messageSource")
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource bean = new ReloadableResourceBundleMessageSource();
@@ -33,8 +39,13 @@ public class OrderdemoApplication {
         bean.setValidationMessageSource(messageSource());
         return bean;
     }
+
     public static void main(String[] args) {
         SpringApplication.run(OrderdemoApplication.class, args);
     }
+
+
+
+
 
 }

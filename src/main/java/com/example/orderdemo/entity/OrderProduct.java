@@ -14,7 +14,7 @@ import java.util.List;
 
 @Entity(name = "orderproduct")
 @Table
-public class OrderProduct {
+public class OrderProduct extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -25,7 +25,7 @@ public class OrderProduct {
     private Customer customer;
 
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "orderproduct_id")
     private List<OrderDetail> orderDetailList;
 
